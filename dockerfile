@@ -1,5 +1,5 @@
 FROM openjdk:8u302
-COPY ./target/spring-petclinic-Build-*.jar /usr/src/
+COPY ./target/spring-petclinic-Build-*.ja /usr/src/
 WORKDIR /usr/src/
 EXPOSE 8080
 ENTRYPOINT java -jar /usr/src/spring-petclinic-Build-*.jar
