@@ -146,11 +146,7 @@
             <artifactId>checkstyle</artifactId>
             <version>8.32</version>
           </dependency>
-          <dependency>
-            <groupId>io.spring.nohttp</groupId>
-            <artifactId>nohttp-checkstyle</artifactId>
-            
-          </dependency>
+
         </dependencies>
         <executions>
           <execution>
