@@ -65,7 +65,7 @@ pipeline {
 						    
 							docker container inspect --format={{.State.Status}} SpringProject |\
 							xargs -iaa bash -c 'if [ "aa" == "running" ] ; \
-							then echo "Container is running" \
+							then echo "Container is Running" \
 							&& docker container ls -a -fname=$containerName -q --format={{.Image}} | xargs -I{} -r docker tag {} $stableImage \
 							&& docker save -o /root/stable-image/$stableVersion.tar $stableImage \
 							&& echo "Finished Backup Stable Image"; \
