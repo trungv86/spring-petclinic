@@ -46,7 +46,7 @@ pipeline {
          stage('Upload image to Nexus Repo') {
             steps {
                 script {
-                   withDockerRegistry(credentialsId: 'nexus.trungvh6.com', toolName: 'Docker on Host', url: 'nexus.trungvh6.com:9001/dockerhosted') {
+                   withDockerRegistry(credentialsId: 'nexus.trungvh6.com', toolName: 'Docker on Host', url: 'https://nexus.trungvh6.com:9001/dockerhosted') {
                        dockerImage.push()
                        
                    }
