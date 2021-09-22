@@ -32,7 +32,7 @@ pipeline {
         stage('Build Maven Project') {
             steps {
                 sh 'echo $previousNumber'
-                sh "mvn clean install -Dv='Build-$newVersion'"
+                sh "mvn clean install -Dv='$newVersion'"
             }
         }
         
@@ -46,7 +46,7 @@ pipeline {
          stage('Upload image to Nexus Repo') {
             steps {
                 script {
-                   withDockerRegistry(credentialsId: 'nexus.trungvh6.com', toolName: 'Docker on Host', url: 'http://nexus.trungvh6.com:9001/dockerhosted') {
+                   withDockerRegistry(credentialsId: 'nexus.trungvh6.com', toolName: 'Docker on Host', url: 'nexus.trungvh6.com:9001/dockerhosted') {
                        dockerImage.push()
                        
                    }
