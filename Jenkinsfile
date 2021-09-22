@@ -35,6 +35,19 @@ pipeline {
                 sh "mvn clean install -Dv='$newVersion'"
             }
         }
+            
+        stage('Push Maven Artifact to Nexus Repo') {
+            steps {
+                nexusArtifactUploader artifacts: [
+                        [
+                                artifactId: 'spring-petclinic', 
+                                classifier: '', 
+                                file: 'target/spring-petclinic-Build-$newVersion.jar', 
+                                type: 'jar'
+                        ]
+                ], credentialsId: 'nexus.trungvh6.com', groupId: 'org.springframework.samples', nexusUrl: '192.168.169.129:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'http://192.168.169.129:8081/repository/MavenHosted/', version: 'Build-$newVersion'
+            }
+        }         
         
         stage('Build Docker Image') {
             steps {
