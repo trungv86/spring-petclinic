@@ -1,3 +1,4 @@
+def checkContainer = "docker container ls  -fname=SpringProject -q"
 pipeline {
     agent any
     tools {
@@ -12,8 +13,10 @@ pipeline {
         stableImage = "nexus.trungvh6.com:9001/spring:stable$currentDATE"
         imageName = "nexus.trungvh6.com:9001/spring:$newVersion"
         oldImage= "nexus.trungvh6.com:9001/spring:$oldVersion"
+        currentImage = ''
         dockerImage = ''
         containerName = "SpringProject"
+        checkContainer = "docker container ls  -fname=${SpringProject} -q"
     }
 
 
@@ -29,7 +32,7 @@ pipeline {
         stage('Build Maven Project') {
             steps {
                 sh 'echo $previousNumber'
-                sh "mvn clean install -Dv='$newVersion'"
+                sh "mvn clean install -Dv='Build-$newVersion'"
             }
         }
         
@@ -43,7 +46,7 @@ pipeline {
          stage('Upload image to Nexus Repo') {
             steps {
                 script {
-                   withDockerRegistry(credentialsId: 'nexus.trungvh6.com', toolName: 'Docker on Host', url: 'nexus.trungvh6.com:9001/dockerhosted') {
+                   withDockerRegistry(credentialsId: 'nexus.trungvh6.com', toolName: 'Docker on Host', url: 'http://nexus.trungvh6.com:9001/dockerhosted') {
                        dockerImage.push()
                        
                    }
@@ -53,13 +56,22 @@ pipeline {
         
         stage('Backup Stable Image - Release Server') {
             steps {
+                
                 withCredentials([usernamePassword(credentialsId: 'Release-Server', passwordVariable: 'releasePass', usernameVariable: 'releaseUser')]) {
                     
+                    sh 'sshpass -p $releasePass ssh $releaseUser@release "rm -rf /root/stable-image/*" '
 					sh '''
 						sshpass -p $releasePass ssh $releaseUser@release "
-							rm -rf /root/stable-image/*
-							docker container ls -a -fname=$containerName -q --format="{{.Image}}" | xargs -I{} docker tag {} $stableImage
-							docker save -o /root/stable-image/$stableVersion.tar $stableImage "
+						    
+							docker container inspect --format={{.State.Status}} SpringProject |\
+							xargs -iaa bash -c 'if [ "aa" == "running" ] ; \
+							then echo "Container is running" \
+							&& docker container ls -a -fname=$containerName -q --format={{.Image}} | xargs -I{} -r docker tag {} $stableImage \
+							&& docker save -o /root/stable-image/$stableVersion.tar $stableImage \
+							&& echo "Finished Backup Stable Image"; \
+							else echo "Container is not running"; \
+							fi '
+							"
 					'''     
                 }   
 
