@@ -47,7 +47,7 @@ pipeline {
                                         file: 'target/spring-petclinic-Build-'+ jarVersion +'.jar', 
                                         type: 'jar'
                                 ]
-                            ], credentialsId: 'nexus.trungvh6.com', groupId: 'org.springframework.samples', nexusUrl: 'nexus.trungvh6.com:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'http://nexus.trungvh6.com:8081/repository/MavenHosted/', version: 'Build-'+ jarVersion
+                            ], credentialsId: 'nexus.trungvh6.com', groupId: 'org.springframework.samples', nexusUrl: 'nexus.trungvh6.com:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'MavenHosted', version: 'Build-'+ jarVersion
                     }                              
             }
         }         
