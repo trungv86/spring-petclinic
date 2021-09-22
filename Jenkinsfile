@@ -32,7 +32,7 @@ pipeline {
         stage('Build Maven Project') {
             steps {
                 sh 'echo $previousNumber'
-                sh "mvn clean install -Dv='Build-$newVersion'"
+                sh "mvn clean install -Dv='$newVersion'"
             }
         }
         
